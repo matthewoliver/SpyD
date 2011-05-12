@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<project name="toplink-essentials" default="compile" basedir=".">
+
+   <property name="builddir" value="classes" />
+   <property name="srcdir" value="src" />
+   
+
+	<target name="clean" depends="">
+		<delete dir="${builddir}" />
+   	</target>
+   
+   	<target name="compile" depends="" description="">
+        
+		<!-- setup directories -->
+      		<mkdir dir="${builddir}" />
+
+      		<!-- compile postscript -->
+      		<javac 	srcdir="${srcdir}" 
+			destdir="${builddir}" 
+			debug="on"
+			verbose="on" />
+     
+		<!-- copy the *.xsd files from the src directory -->
+		<copy todir="${builddir}" >
+			<fileset dir="${srcdir}">
+				<include name="**/*.xsd" />
+			</fileset>
+		</copy>
+
+  	</target>
+
+</project>

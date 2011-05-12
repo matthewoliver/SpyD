@@ -1,0 +1,209 @@
+<project name="spyd" default="usage" basedir=".">
+
+
+    <!--===================================================== 
+    External properties file, path definitions and filesets
+    ======================================================-->
+ 	
+	<property file="etc/db.properties"/>
+
+	<property name="srcdir" value="src"/>
+	<property name="builddir" value="bin"/>
+	<property name="distdir" value="dist"/>
+	<property name="sqldir" value="sql"/>
+	<property name="extdir" value="ext"/>
+	<property name="extbin" value="${extdir}/bin" />
+	<property name="extjar" value="${extdir}/jar" />
+	<property name="antlibdir"  value="${extdir}/antlib" />
+	<property name="antlib_bin"  value="${antlibdir}/bin" />
+	<property name="antlib_jar"  value="${antlibdir}/jar" />	
+	<property name="etcdir" value="etc"/>
+	
+	<property name="spydjar" value="spyd.jar"/>
+	
+	<property name="nmc.classpath" value="${distdir}/${spydjar}"/>
+	
+	<path id="spyd.ext.path">
+		<dirset dir="${extbin}" />
+		<fileset dir="${extjar}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+	<path id="ant.lib.path">
+		<dirset dir="${antlib_bin}" />
+		<fileset dir="${antlib_jar}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${extjar}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+	<path id="spyd.bin">
+	    <pathelement location="bin"/>
+		<pathelement location="${extbin}"/>
+	</path>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: define_tasks                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="define_tasks">
+		 
+	    <!-- Task definitions (used within targets) 
+	    
+	    We have to put these inside a target becuase we cannot define the tasks until
+	    the build_libs target has been run.
+	    --> 
+	
+		<!-- This is the hibernate tool task definition -->
+		<taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask">
+	    	<classpath refid="spyd.bin"/>
+	    	<classpath refid="ant.lib.path"/>
+		</taskdef>
+    </target>
+
+
+	
+	<target name="psyd_local" description="Create an installation of nmc talking to a local postgres DB"	depends="setup_local" />
+
+	<target name="dist" description="Create the files necessary for distribution" 
+		depends="init, compile, makejar, create_tables_sql">
+	</target>
+	
+	<target name="spyd" depends="create_tables_sql, makejar">
+    </target>
+
+	<target name="setup_local" description="Build locally" depends="makejar, setup_local_db">
+	</target>
+	
+	<target name="usage" description="Display this message">
+		<java classname="org.apache.tools.ant.Main">
+			<arg value="-projecthelp" />
+		</java>
+	</target>
+	
+    <!--===================================================== 
+    Export the schema generated from annotation in source straight
+    to the database defined in the /etc properties files.
+    ======================================================-->
+	<target name="setup_local_db" description="Build the local DB" depends="define_tasks">
+		<!-- Use the hibernate tool to generate the DBs -->
+		<hibernatetool destdir="sql">
+			<annotationconfiguration propertyfile="${local_db_properties}" configurationfile="etc/hibernate.cfg.xml"/>
+			<hbm2ddl export="true"
+				drop="true"
+				create="true"
+				delimiter=";"
+				format="true"
+				outputfilename="create-tables.sql">
+			</hbm2ddl>
+		</hibernatetool>
+		
+		<!-- Populate them using the pre-populated data stored in the SQL files -->
+		<!--<sql onerror="continue" driver="${db.jdbcdriver}" password="${db.pass}" url="${db.mj_url}" userid="${db.user}">
+			<classpath refid="nmc.ext.path"/>
+			<transaction src="sql/create_qf_sysref.sql"/>
+		</sql>-->
+	</target>
+	
+    <!--===================================================== 
+	The following targets are used during the build process,
+	to initialise folders, clean out previos compiles, do the
+	compile, run the update version job and make the jar.
+    ======================================================-->
+    <target name="clean" depends="" description="Clean the project">
+		<delete includeemptydirs="true">
+			<fileset dir="${builddir}" >
+			    <include name="**/*"/>
+			</fileset>
+		</delete>
+    	<delete includeemptydirs="true">
+    		<fileset dir="${distdir}" >
+    			<include name="**/*"/>
+    		</fileset>
+    	</delete>
+    	
+		<!-- Call the clean target of the exteral library build.xml -->
+		<ant antfile="${extdir}/build.xml" target="clean" inheritall="false" inheritrefs="false" />    	
+    </target>
+
+	<target name="init" description="Create the initial directories">
+		<delete dir="${builddir}"/>
+		<mkdir dir="${builddir}"/>	
+		<mkdir dir="${distdir}"/>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_libs                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="build_libs">
+            <ant antfile="${extdir}/build.xml" inheritall="false" inheritrefs="false" />
+    </target>
+	
+	<target name="compile" description="Compile the .java sources" depends="init, build_libs, define_tasks">
+		<javac 
+			srcdir="${srcdir}"
+	        destdir="${builddir}"
+	        debug="on"
+			verbose="on"
+			classpathref="spyd.ext.path"/>
+		<copy  todir="${builddir}">
+        	<fileset dir="${srcdir}">
+        		<include name="**/*.properties"/>
+        	</fileset>
+		</copy>
+	</target>
+	
+    <target name ="makejar" description="Create the client JAR" depends="compile">
+    	<delete>
+    		<fileset file="${distdir}/${spydjar}">
+    		</fileset>
+    	</delete>
+    	
+    	<unjar dest = "${distdir}/jarlib">
+			<fileset dir = "${extjar}">
+			    <include name = "*.jar"/>
+				<exclude name = "xdoclet*"/>
+				<exclude name = "xjavadoc*"/>
+				<exclude name = "jrelease*"/>
+				<exclude name = "hsqldb*"/>
+			</fileset>
+		</unjar>
+    	
+        <jar jarfile="${distdir}/${spydjar}" manifest="etc/MANIFEST.MF">
+			<fileset dir="${builddir}">
+			    <include name="**/*.class"/>
+			</fileset>
+        	<fileset dir="${distdir}/jarlib">
+        		<include name="**/*"/>
+        	</fileset>
+        	<fileset dir="${extbin}">
+        		<include name="**/*"/>
+        	</fileset>
+        	<fileset dir=".">
+        		<include name="etc/*"/>
+        	</fileset>
+        	<fileset dir="${srcdir}">
+        		<include name="**/*.properties"/>
+        	</fileset>
+        	
+    	</jar>
+		<delete dir="${distdir}/lib"/>
+    	<delete dir="${distdir}/jarlib"/>
+    </target>
+
+	<target name="create_tables_sql" description="Create the create-tables.sql file, used by the create facility targets" depends="compile">
+		<hibernatetool destdir="${builddir}">
+			<annotationconfiguration propertyfile="etc/db.properties"  configurationfile="etc/hibernate.cfg.xml"/>
+			<hbm2ddl export="false"
+				drop="true"
+				create="true"
+				delimiter=";"
+				format="true"
+				outputfilename="create_tables.sql">
+			</hbm2ddl>
+		</hibernatetool>
+	</target>
+	
+</project> 

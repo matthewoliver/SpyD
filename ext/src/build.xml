@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     15/07/2009                        
+
+     Multipage Library    
+     Build file for building the multipage plugin 3rd party libs.
+                   
+     Matthew Oliver                                                                
+     ====================================================================== -->
+<project name="Network Manifest Checker" default="build_libs">
+    <description>
+            Build file for building the multipage plugin 3rd party libs.
+    </description>
+
+	<property name="bindir" value="../bin"/>
+	<property name="antlib_bindir" value="../antlib/bin"/>
+	<property name="jreleaseinfo" value="jreleaseinfo-1.2.1" />
+	<property name="toplink-essentials" value="toplink-essentials-2.1-60f-sources" />
+	<property name="log4j" value="apache-log4j-1.2.15" />
+	<property name="slf4j" value="slf4j-1.5.8" />
+	<property name="postgresql-jdbc" value="postgresql-jdbc-8.4-701.src" />
+	<property name="commons-collections" value="commons-collections-3.2.1-src" />
+	<property name="javassist" value="javassist-3.11.0" />
+	
+    <!-- ================================= 
+          target: build_libs              
+         ================================= -->
+    <target name="build_libs" depends="build_toplink_essentials, build_log4j, build_slf4j, build_postgres_jdbc, build_commons_collections, build_javassist, build_jreleaseinfo" description="Build file for building the multipage plug 3rd party libs.">
+    	<echo>Building third pary libs completed</echo>
+    </target>
+
+	<!-- ================================= 
+	     target: clean              
+	     ================================= -->
+	<target name="clean" depends="clean_toplink_essentials, clean_log4j, clean_slf4j, clean_postgres_jdbc, clean_commons_collections, clean_javassist, clean_jreleaseinfo" description="Build file for building the CSV plugin 3rd party libs.">
+		<echo>Cleaning third party libs completed.</echo>
+	</target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_toplink_essentials                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="build_toplink_essentials">
+    	<property name="toplink_essentials_classes" value="${toplink-essentials}/classes" />
+    	
+    	<echo> Building toplink-essentials</echo>
+    	<ant dir="${toplink-essentials}" target="compile" inheritall="false" inheritrefs="false" />
+    	
+    	<!-- Move build files to the antlib bin directory -->
+    	<copy todir="${bindir}">
+    		<fileset dir="${toplink_essentials_classes}">
+    			<include name="**/*"/>
+    		</fileset>
+    	</copy>
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean_toplink_essentials                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean_toplink_essentials">
+    	<echo>Cleaning toplink-essentials</echo>
+    	<ant dir="${toplink-essentials}" target="clean" inheritall="false" inheritrefs="false" />
+    </target>	
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_log4j                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="build_log4j">
+    	<property name="log4j_classes" value="${log4j}/dist/classes" />
+    	
+    	<echo> Building log4j</echo>
+    	<ant dir="${log4j}" target="build.core" inheritall="false" inheritrefs="false" />
+    	
+    	<!-- Move build files to the antlib bin directory -->
+    	<copy todir="${bindir}">
+    		<fileset dir="${log4j_classes}">
+    			<include name="**/*"/>
+    		</fileset>
+    	</copy>
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean_log4j                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean_log4j">
+    	<echo>Cleaning log4j</echo>
+    	<ant dir="${log4j}" target="clean" inheritall="false" inheritrefs="false" />
+    </target>	
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_slf4j                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="build_slf4j">
+    	<property name="slf4j_classes" value="${slf4j}/classes" />
+    	
+    	<echo> Building SLF4J</echo>
+    	<ant dir="${slf4j}" target="compile" inheritall="false" inheritrefs="false" />
+    	
+    	<!-- Move build files to the antlib bin directory -->
+    	<copy todir="${bindir}">
+    		<fileset dir="${slf4j_classes}">
+    			<include name="**/*"/>
+    		</fileset>
+    	</copy>
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean_slf4j                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean_slf4j">
+    	<echo>Cleaning SLF4J</echo>
+    	<ant dir="${slf4j}" target="clean" inheritall="false" inheritrefs="false" />
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_postgres_jdbc                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="build_postgres_jdbc">
+    	<property name="postgres_classes" value="${postgresql-jdbc}/build" />
+    	
+    	<echo> Building Postgres JDBC</echo>
+    	<ant dir="${postgresql-jdbc}" target="compile" inheritall="false" inheritrefs="false" />
+    	
+    	<!-- Move build files to the antlib bin directory -->
+    	<copy todir="${bindir}">
+    		<fileset dir="${postgres_classes}">
+    			<include name="**/*"/>
+    		</fileset>
+    	</copy>
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean_postgres_jdbc                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean_postgres_jdbc">
+    	<echo>Cleaning Postgres JDBC</echo>
+    	<ant dir="${postgresql-jdbc}" target="clean" inheritall="false" inheritrefs="false" />
+    </target>	
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_commons_collections                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="build_commons_collections">
+    	<property name="common_collections_classes" value="${commons-collections}/build/classes" />
+    	
+    	<echo> Building common-collections</echo>
+    	<ant dir="${commons-collections}" target="compile" inheritall="false" inheritrefs="false" />
+    	
+    	<!-- Move build files to the antlib bin directory -->
+    	<copy todir="${bindir}">
+    		<fileset dir="${common_collections_classes}">
+    			<include name="**/*"/>
+    		</fileset>
+    	</copy>            
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean_commons_collections                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean_commons_collections">
+    	<echo>Cleaning commons-collections</echo>
+    	<ant dir="${commons-collections}" target="clean" inheritall="false" inheritrefs="false" />
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_javassist                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="build_javassist">
+    	<property name="javassist_classes" value="${javassist}/build/classes" />
+    	
+    	<echo> Building javassist</echo>
+    	<ant dir="${javassist}" target="compile" inheritall="false" inheritrefs="false" />
+    	
+    	<!-- Move build files to the antlib bin directory -->
+    	<copy todir="${bindir}">
+    		<fileset dir="${javassist_classes}">
+    			<include name="**/*"/>
+    		</fileset>
+    	</copy>
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean_javassist                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean_javassist">
+    	<echo>Cleaning javassist</echo>
+    	<ant dir="${javassist}" target="clean" inheritall="false" inheritrefs="false" />
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_jreleaseinfo                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="build_jreleaseinfo">
+    	<property name="jreleaseinfo_classes" value="${jreleaseinfo}/target/classes" />
+    	
+    	<echo> Building jreleaseinfo</echo>
+    	<ant dir="${jreleaseinfo}" target="compile" />
+    	
+    	<!-- Move build files to the antlib bin directory -->
+    	<copy todir="${antlib_bindir}">
+    		<fileset dir="${jreleaseinfo_classes}">
+    			<include name="**/*"/>
+    		</fileset>
+    	</copy>
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean_jreleaseinfo                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean_jreleaseinfo">
+    	<echo>Cleaning jreleaseinfo</echo>
+    	<ant dir="${jreleaseinfo}" target="clean" />
+    </target>	
+		
+</project>

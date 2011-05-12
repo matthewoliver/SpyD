@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<project name="" default="compile" basedir=".">
+
+   <property name="builddir" value="classes" />
+   <property name="tmp.builddir" value="tmp-build" />
+   <property name="api.src" value="slf4j-api/src/main/java/" />
+   <property name="jcl.src" value="slf4j-jcl/src/main/java/" />
+   
+   <path id="build.path">
+     <pathelement location="${builddir}"/>
+     <pathelement location="commons-logging-api-1.1.1.jar"/>
+   </path>
+
+   <target name="clean" depends="">
+      <delete dir="${builddir}" />
+      <delete dir="${tmp.builddir}" />
+   </target>
+   
+   <target name="compile" depends="" description="">
+        
+     <!-- The api source needs to be compiled first.. but if we compile both source trees into the same build directory, 
+          the classes from the jcl that MUST replace the api versions don't seem to be updated, so instead we compile them into 
+          seperate locations, then do a copy. -->
+
+      <!-- setup directories -->
+      <mkdir dir="${builddir}" />
+      <mkdir dir="${tmp.builddir}" />
+
+      <!-- compile api source -->
+      <javac srcdir="${api.src}" destdir="${builddir}" />
+
+      <!-- compile jcl -->
+      <javac srcdir="${jcl.src}" destdir="${tmp.builddir}" classpathref="build.path" />
+
+      <!-- Now move and over write when required the class files from ${tmp.builddir} to ${builddir} -->
+      <copy todir="${builddir}" overwrite="yes" >
+      	 <fileset dir="${tmp.builddir}" />
+      </copy>
+
+      <!-- Clean up -->
+      <delete dir="${tmp.builddir}" />
+
+  </target>
+
+</project>

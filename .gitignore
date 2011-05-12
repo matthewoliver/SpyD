@@ -1,0 +1,8 @@
+*.class
+dist/
+bin/
+!bin/_README
+ext/bin/
+!ext/bin/_README
+ext/antlib/bin/
+!ext/antlib/bin/_README
