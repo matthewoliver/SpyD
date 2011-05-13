@@ -18,6 +18,12 @@
 */
 package au.gov.naa.digipres.spyd.module;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Vector;
+
+import au.gov.naa.digipres.spyd.command.Command;
 import au.gov.naa.digipres.spyd.core.Spyd;
 
 public abstract class SpydModule {
@@ -26,9 +32,24 @@ public abstract class SpydModule {
 
 	protected Spyd spyd;
 
+	protected List<Command> moduleCommands;
+
+	protected Queue<String> inputMessages;
+	protected Queue<String> outputMessages;
+
 	public SpydModule(Spyd spyd) {
 		this.spyd = spyd;
+
+		inputMessages = new LinkedList<String>();
+		outputMessages = new LinkedList<String>();
+		moduleCommands = new Vector<Command>();
+		addCommands();
 	}
+
+	/***
+	 * Add the commands that relate to this module to the module command list.
+	 */
+	protected abstract void addCommands();
 
 	public String getName() {
 		return SPYD_MODULE_ABSTRACT_NAME;
@@ -39,5 +60,30 @@ public abstract class SpydModule {
 	 * @throws ModuleExecutionException
 	 */
 	public abstract void execute() throws ModuleExecutionException;
+
+	/**
+	 * Add a message to the end of the input queue. 
+	 * @param message
+	 */
+	public synchronized void addMessage(String message) {
+		inputMessages.add(message);
+	}
+
+	/***
+	 * Get the head message out of the output queue, this action returns and removes the message. 
+	 * @return The string at the head of the output queue. 
+	 */
+	public synchronized String getMessage() {
+		return outputMessages.remove();
+	}
+
+	public List<Command> getModuleCommands() {
+		return moduleCommands;
+	}
+
+	/**
+	 * Event fired when a module is unladed. Must be implemented to cleaning stop what the module is doing.
+	 */
+	public abstract void unloadEvent();
 
 }

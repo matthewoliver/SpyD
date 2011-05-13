@@ -1,0 +1,10 @@
+clean
+compile
+create_tables_sql
+dist
+init
+makejar
+psyd_local
+setup_local
+setup_local_db
+usage

@@ -28,6 +28,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import au.gov.naa.digipres.spyd.core.server.SpydServer;
 import au.gov.naa.digipres.spyd.dao.ConnectionException;
 import au.gov.naa.digipres.spyd.dao.DataAccessManager;
 import au.gov.naa.digipres.spyd.dao.hibernate.HibernateDataAccessManager;
@@ -44,6 +45,8 @@ public class Spyd {
 	private SpydPreferences preferences;
 	private PluginManager pluginManager;
 
+	private SpydServer server;
+
 	public Spyd() {
 		this(true);
 	}
@@ -51,6 +54,7 @@ public class Spyd {
 	public Spyd(boolean debug) {
 		initialiseLogging(debug);
 
+		preferences = new SpydPreferences();
 		pluginManager = new PluginManager(this);
 	}
 
@@ -187,22 +191,21 @@ public class Spyd {
 	}
 
 	public void startNetworkService() throws IOException, SQLException {
-		//		if (server == null) {
-		//			server = new ManifestServer(getPreferences(), this);
-		//			server.start();
-		//			logger.fine("Starting server");
-		//		} else {
-		//			logger.warning("Failed to start server, server already running");
-		//		}
+		if (server == null) {
+			server = new SpydServer(getPreferences(), this);
+			server.start();
+			logger.fine("Starting server");
+		} else {
+			logger.warning("Failed to start server, server already running");
+		}
 
 	}
 
 	public void stopNetworkService() {
-		//		if (server != null) {
-		//			server.shutdownServer();
-		//			logger.fine("Shutting down server");
-		//		}
-
+		if (server != null) {
+			server.shutdownServer();
+			logger.fine("Shutting down server");
+		}
 	}
 
 	/**

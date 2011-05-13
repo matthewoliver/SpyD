@@ -28,6 +28,11 @@ public class InitaliseCommands {
 		commands.add(new HelpCommand());
 		commands.add(new QuitCommand());
 		commands.add(new VersionCommand());
+		commands.add(new ListAllModulesCommand());
+		commands.add(new LoadedModulesCommand());
+		commands.add(new UnloadedModulesCommand());
+		commands.add(new LoadModuleCommand());
+		commands.add(new UnloadModuleCommand());
 		return commands;
 	}
 

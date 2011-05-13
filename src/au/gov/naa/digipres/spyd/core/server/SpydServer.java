@@ -64,7 +64,7 @@ public class SpydServer extends Thread {
 	 * @throws SQLException
 	 */
 	public SpydServer(SpydPreferences preferences, Spyd spyd) throws IOException, SQLException {
-		super("Manifest Server (primary)");
+		super("Spyd Server (primary)");
 
 		this.preferences = preferences;
 
@@ -125,7 +125,7 @@ public class SpydServer extends Thread {
 
 			// If we have not found a free port to use, give up and throw an exception
 			if (!portFound) {
-				throw new IOException("Could not find a port to use for the manifest server - tried ports " + origPort + " to "
+				throw new IOException("Could not find a port to use for the spyd server - tried ports " + origPort + " to "
 				                      + (origPort + MAX_PORTS_TO_ATTEMPT));
 			}
 		}
@@ -134,7 +134,7 @@ public class SpydServer extends Thread {
 		threads = new Vector<SpydServerWorker>();
 		for (int i = 0; i < threadPoolSize; ++i) {
 			SpydServerWorker w = new SpydServerWorker(this);
-			new Thread(w, "Manifest worker #" + i).start();
+			new Thread(w, "Spyd worker #" + i).start();
 			threads.addElement(w);
 		}
 	}
@@ -155,7 +155,7 @@ public class SpydServer extends Thread {
 	 */
 	private void runServer() {
 
-		System.out.println("CheckerServer started on port " + port);
+		System.out.println("Spyd server started on port " + port);
 
 		try {
 			// This loop is only ended when the shutdownServer method is called from an external source.

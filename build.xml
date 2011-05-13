@@ -123,6 +123,11 @@
     			<include name="**/*"/>
     		</fileset>
     	</delete>
+    	<delete includeemptydirs="true">
+    	    <fileset dir="${sqldir}" >
+    	    	<include name="**/*"/>
+    	    </fileset>
+    	</delete>
     	
 		<!-- Call the clean target of the exteral library build.xml -->
 		<ant antfile="${extdir}/build.xml" target="clean" inheritall="false" inheritrefs="false" />    	
@@ -132,6 +137,7 @@
 		<delete dir="${builddir}"/>
 		<mkdir dir="${builddir}"/>	
 		<mkdir dir="${distdir}"/>
+		<mkdir dir="${sqldir}"/>
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 

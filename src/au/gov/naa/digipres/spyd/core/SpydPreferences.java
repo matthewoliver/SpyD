@@ -43,6 +43,8 @@ public class SpydPreferences {
 
 	public static final String THREAD_POOL_SIZE = "thread.pool.size";
 
+	public static final String AUTO_LOAD_MODULES = "auto.load.modules";
+
 	protected Map<String, PreferenceValue> loadedPreferences = new HashMap<String, PreferenceValue>();
 
 	public SpydPreferences() {
@@ -116,6 +118,9 @@ public class SpydPreferences {
 		}
 		if (newSettings.containsKey(THREAD_POOL_SIZE)) {
 			setPreference(THREAD_POOL_SIZE, newSettings.getProperty(THREAD_POOL_SIZE));
+		}
+		if (newSettings.containsKey(AUTO_LOAD_MODULES)) {
+			setPreference(AUTO_LOAD_MODULES, newSettings.getProperty(AUTO_LOAD_MODULES));
 		}
 	}
 

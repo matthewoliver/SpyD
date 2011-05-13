@@ -41,4 +41,11 @@ public class Constants {
 		}
 	};
 
+	public static final int STATUS_DIRTY = 0;
+	public static final int STATUS_PASSED = 1;
+	public static final int STATUS_UNCHECKED = 2;
+	public static final int STATUS_FAILED = 3;
+
+	public static final String DEFAULT_CHECKSUM_ALGORITHM = "sha-512";
+
 }

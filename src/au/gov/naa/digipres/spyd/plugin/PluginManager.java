@@ -35,6 +35,7 @@ import au.gov.naa.digipres.spyd.command.CommandManager;
 import au.gov.naa.digipres.spyd.core.DeSerializeClassLoader;
 import au.gov.naa.digipres.spyd.core.Spyd;
 import au.gov.naa.digipres.spyd.core.SpydException;
+import au.gov.naa.digipres.spyd.module.ModuleException;
 import au.gov.naa.digipres.spyd.module.ModuleManager;
 import au.gov.naa.digipres.spyd.module.SpydModule;
 
@@ -219,7 +220,11 @@ public class PluginManager {
 		// Modules
 		List<SpydModule> moduleList = spydPlugin.getModules();
 		if (moduleList != null && !moduleList.isEmpty()) {
-			moduleManager.addModules(moduleList);
+			try {
+				moduleManager.addModules(moduleList);
+			} catch (ModuleException e) {
+				throw new SpydException(e);
+			}
 		}
 
 		// Commands

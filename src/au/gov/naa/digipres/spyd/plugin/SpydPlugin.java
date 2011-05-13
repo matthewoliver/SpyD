@@ -26,6 +26,11 @@ import au.gov.naa.digipres.spyd.module.SpydModule;
 
 public abstract class SpydPlugin implements Comparable<SpydPlugin> {
 
+	/***
+	 * List of commands that do not relate to a particular module, or is dependant on a module in this plugin.
+	 * Commands that only exist while the module is loaded should be added to the module. 
+	 * @return A list of commands.
+	 */
 	public List<Command> getCommands() {
 		return new ArrayList<Command>();
 	}

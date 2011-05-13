@@ -25,14 +25,14 @@
     <!-- ================================= 
           target: build_libs              
          ================================= -->
-    <target name="build_libs" depends="build_toplink_essentials, build_log4j, build_slf4j, build_postgres_jdbc, build_commons_collections, build_javassist, build_jreleaseinfo" description="Build file for building the multipage plug 3rd party libs.">
+    <target name="build_libs" depends="build_toplink_essentials, build_log4j, build_slf4j, build_postgres_jdbc, build_commons_collections, build_javassist, build_jreleaseinfo, build_commons_cli" description="Build file for building the multipage plug 3rd party libs.">
     	<echo>Building third pary libs completed</echo>
     </target>
 
 	<!-- ================================= 
 	     target: clean              
 	     ================================= -->
-	<target name="clean" depends="clean_toplink_essentials, clean_log4j, clean_slf4j, clean_postgres_jdbc, clean_commons_collections, clean_javassist, clean_jreleaseinfo" description="Build file for building the CSV plugin 3rd party libs.">
+	<target name="clean" depends="clean_toplink_essentials, clean_log4j, clean_slf4j, clean_postgres_jdbc, clean_commons_collections, clean_javassist, clean_jreleaseinfo, clean_commons_cli" description="Build file for building the CSV plugin 3rd party libs.">
 		<echo>Cleaning third party libs completed.</echo>
 	</target>
 	
@@ -159,6 +159,36 @@
     <target name="clean_commons_collections">
     	<echo>Cleaning commons-collections</echo>
     	<ant dir="${commons-collections}" target="clean" inheritall="false" inheritrefs="false" />
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_commons_cli                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="build_commons_cli">
+    	<!-- The commons_cli build script downloads required dependencies from the internet,
+    	    We don't want this so instead we have to use a compiled jar file under ext/jar.
+    	    The source coded used to build this library will still be apart of our repository, it just wont be
+    	    built at compile time. -->
+    	<property name="commons_classes" value="${commons_cli}/target/classes" />
+    	
+    	<!--<echo>Building commons cli.</echo>
+    	<ant dir="${commons_cli}" target="compile" />-->
+    	
+    	<!-- Move classes to the bin directory -->
+    	<!--<copy todir="${bindir}">
+    		<fileset dir="${commons_classes}">
+    			<include name="**/*"/>
+			</fileset>
+    	</copy>-->
+    	<echo>Commons_cli library is not built from source at compile time.</echo>
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean_commons_cli                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean_commons_cli">
+    	<echo>Cleaning commons cli.</echo>
+    	<ant dir="${commons_cli}" target="clean" />
     </target>
 	
 	<!-- - - - - - - - - - - - - - - - - - 

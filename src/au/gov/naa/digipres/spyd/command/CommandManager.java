@@ -66,6 +66,12 @@ public class CommandManager {
 		}
 	}
 
+	public void removeCommand(Command command) {
+		if (commands.containsKey(command.getTrigger())) {
+			commands.remove(command.getTrigger());
+		}
+	}
+
 	private void addListenersToNewCommand(Command command) {
 		for (CommandListener listener : commandlisteners) {
 			command.registerListener(listener);
@@ -109,6 +115,10 @@ public class CommandManager {
 		return cloneCommand(commands.get(trigger));
 	}
 
+	public PluginManager getPluginManager() {
+		return pluginManager;
+	}
+
 	protected Command cloneCommand(Command command) {
 		try {
 			Command clone = command.getClass().newInstance();
@@ -143,4 +153,5 @@ public class CommandManager {
 	public Spyd getSpyd() {
 		return spyd;
 	}
+
 }
