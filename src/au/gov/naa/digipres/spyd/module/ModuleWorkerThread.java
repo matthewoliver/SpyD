@@ -20,13 +20,11 @@ package au.gov.naa.digipres.spyd.module;
 
 import java.util.List;
 
-import au.gov.naa.digipres.spyd.core.server.SpydServer;
-
 public class ModuleWorkerThread extends Thread {
 
 	private ModuleManager moduleManager;
 	private boolean workerRunning = true;
-	private SpydModule module;
+	private SpydModule module = null;
 
 	public ModuleWorkerThread(ModuleManager moduleManager) {
 		this.moduleManager = moduleManager;
@@ -40,8 +38,10 @@ public class ModuleWorkerThread extends Thread {
 		notify();
 	}
 
-	public void setModule(SpydModule module) {
+	public synchronized void setModule(SpydModule module) {
 		this.module = module;
+		this.workerRunning = true;
+		notify();
 	}
 
 	public SpydModule getModule() {
@@ -77,7 +77,7 @@ public class ModuleWorkerThread extends Thread {
 				module = null;
 				List<ModuleWorkerThread> workerPool = moduleManager.getWorkerPool();
 				synchronized (workerPool) {
-					if (workerPool.size() >= SpydServer.threadPoolSize) {
+					if (workerPool.size() >= ModuleManager.threadPoolSize) {
 						// Too many threads, exit this one
 						return;
 					}

@@ -33,6 +33,8 @@ public class InitaliseCommands {
 		commands.add(new UnloadedModulesCommand());
 		commands.add(new LoadModuleCommand());
 		commands.add(new UnloadModuleCommand());
+		commands.add(new IdleModuleThreadsCommand());
+		commands.add(new ListRunningModuleThreadsCommand());
 		return commands;
 	}
 
