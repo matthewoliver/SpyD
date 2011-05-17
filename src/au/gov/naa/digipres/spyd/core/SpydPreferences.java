@@ -25,6 +25,7 @@ import java.util.Properties;
 import java.util.prefs.Preferences;
 
 import au.gov.naa.digipres.spyd.dao.hibernate.HibernateDataAccessManager;
+import au.gov.naa.digipres.spyd.preferences.PreferenceManager;
 
 /**
  * A simple class to encapsulate the preferences for Spyd.
@@ -46,6 +47,7 @@ public class SpydPreferences {
 	public static final String AUTO_LOAD_MODULES = "auto.load.modules";
 
 	protected Map<String, PreferenceValue> loadedPreferences = new HashMap<String, PreferenceValue>();
+	protected PreferenceManager preferenceManager = null;
 
 	public SpydPreferences() {
 		// default constructor
@@ -122,6 +124,13 @@ public class SpydPreferences {
 		if (newSettings.containsKey(AUTO_LOAD_MODULES)) {
 			setPreference(AUTO_LOAD_MODULES, newSettings.getProperty(AUTO_LOAD_MODULES));
 		}
+
+		// update preferences loaded from the preferences manager (from other plugins).
+		for (String pref : preferenceManager.getPreferences()) {
+			if (newSettings.containsKey(pref)) {
+				setPreference(pref, newSettings.getProperty(pref));
+			}
+		}
 	}
 
 	/**
@@ -196,5 +205,13 @@ public class SpydPreferences {
 			this.value = value;
 		}
 
+	}
+
+	public void setPreferenceManager(PreferenceManager preferenceManager) {
+		this.preferenceManager = preferenceManager;
+	}
+
+	public PreferenceManager getPreferenceManager() {
+		return preferenceManager;
 	}
 }

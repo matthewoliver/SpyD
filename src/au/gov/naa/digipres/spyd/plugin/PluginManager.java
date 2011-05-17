@@ -38,6 +38,7 @@ import au.gov.naa.digipres.spyd.core.SpydException;
 import au.gov.naa.digipres.spyd.module.ModuleException;
 import au.gov.naa.digipres.spyd.module.ModuleManager;
 import au.gov.naa.digipres.spyd.module.SpydModule;
+import au.gov.naa.digipres.spyd.preferences.PreferenceManager;
 
 /**
  * This class is responsible for managing the loading of plugins in to Spyd.
@@ -51,6 +52,7 @@ public class PluginManager {
 	 */
 	private CommandManager commandManager;
 	private ModuleManager moduleManager;
+	private PreferenceManager preferenceManager;
 
 	/**
 	 * The deserialised class loader
@@ -86,6 +88,7 @@ public class PluginManager {
 		// Manager class. Here we enumerate all the Managers.
 		commandManager = new CommandManager(this);
 		moduleManager = new ModuleManager(this);
+		preferenceManager = new PreferenceManager(this);
 	}
 
 	/**
@@ -233,6 +236,12 @@ public class PluginManager {
 			commandManager.addCommands(commandList);
 		}
 
+		// Preferences
+		List<String> prefList = spydPlugin.getPreferences();
+		if (commandList != null && !commandList.isEmpty()) {
+			preferenceManager.addPreferences(prefList);
+		}
+
 		loadedPlugins.add(spydPlugin);
 		logger.fine("Successfully loaded the " + spydPlugin.getName() + " (" + spydPlugin.getVersion() + ") plugin");
 	}
@@ -296,5 +305,12 @@ public class PluginManager {
 	 */
 	public ModuleManager getModuleManager() {
 		return moduleManager;
+	}
+
+	/**
+	 * @return Returns the preferenceManager.
+	 */
+	public PreferenceManager getPreferenceManager() {
+		return preferenceManager;
 	}
 }

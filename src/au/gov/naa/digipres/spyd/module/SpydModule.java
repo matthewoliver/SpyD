@@ -24,21 +24,20 @@ import java.util.Queue;
 import java.util.Vector;
 
 import au.gov.naa.digipres.spyd.command.Command;
-import au.gov.naa.digipres.spyd.core.Spyd;
 
 public abstract class SpydModule {
 
 	public static final String SPYD_MODULE_ABSTRACT_NAME = "Abstact Module";
 
-	protected Spyd spyd;
+	protected ModuleManager moduleManager;
 
 	protected List<Command> moduleCommands;
 
 	protected Queue<String> inputMessages;
 	protected Queue<String> outputMessages;
 
-	public SpydModule(Spyd spyd) {
-		this.spyd = spyd;
+	public SpydModule(ModuleManager moduleManager) {
+		this.moduleManager = moduleManager;
 
 		inputMessages = new LinkedList<String>();
 		outputMessages = new LinkedList<String>();

@@ -305,4 +305,8 @@ public class ModuleManager {
 
 		return null;
 	}
+
+	public PluginManager getPluginManager() {
+		return pluginManager;
+	}
 }

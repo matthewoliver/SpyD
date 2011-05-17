@@ -39,6 +39,10 @@ public abstract class SpydPlugin implements Comparable<SpydPlugin> {
 		return new ArrayList<SpydModule>();
 	}
 
+	public List<String> getPreferences() {
+		return new ArrayList<String>();
+	}
+
 	/**
 	 * Returns plugin version
 	 */
