@@ -13,6 +13,8 @@ import au.gov.naa.digipres.spyd.module.SpydModule;
 
 public class ChecksumModule extends SpydModule {
 
+	public static final String CHECKSUM_MODULE_NAME = "checksum";
+
 	public static final String PREFERENCE_PERIOD_UNITS = "checksum.period.units";
 	public static final String PREFERENCE_PERIOD = "checksum.period";
 	public static final String PREFERENCE_CHECKSUM_ALGORITHM = "checksum.algorithm";

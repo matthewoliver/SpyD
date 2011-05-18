@@ -246,6 +246,16 @@ public class ModuleManager {
 		}
 	}
 
+	public SpydModule getLoadedModule(String moduleName) throws ModuleException {
+		for (SpydModule mod : loadedModules) {
+			if (mod.getName().equals(moduleName)) {
+				return mod;
+			}
+		}
+
+		throw new ModuleException("Module '" + moduleName + "' not loaded or doesn't exist");
+	}
+
 	public void addModule(SpydModule module, boolean replaceExisting) throws ModuleException {
 		if (replaceExisting) {
 			// Simply add the command, which will replace a command if it already exists. 
