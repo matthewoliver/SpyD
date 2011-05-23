@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import au.gov.naa.digipres.spyd.command.Command;
 import au.gov.naa.digipres.spyd.core.SpydPreferences;
 import au.gov.naa.digipres.spyd.dao.DataAccessManager;
 import au.gov.naa.digipres.spyd.dao.ItemRecordDAO;
 import au.gov.naa.digipres.spyd.module.ModuleExecutionException;
 import au.gov.naa.digipres.spyd.module.ModuleManager;
 import au.gov.naa.digipres.spyd.module.SpydModule;
+import au.gov.naa.digipres.spyd.module.checksum.command.NumberOfChecksumThreadsCommand;
 
 public class ChecksumModule extends SpydModule {
 
@@ -25,6 +27,11 @@ public class ChecksumModule extends SpydModule {
 	private ItemRecordDAO recordDAO;
 	private DataAccessManager dataAccessManager;
 	private int numberOfCheckerThreads;
+
+	private List<CheckerThread> checkerThreads;
+
+	// Place the store the commands loeded when these modules are loaded
+	private List<Command> moduleCommands;
 
 	private Logger logger;
 
@@ -53,10 +60,14 @@ public class ChecksumModule extends SpydModule {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see au.gov.naa.digipres.spyd.module.SpydModule#addCommands()
+	 */
 	@Override
 	protected void addCommands() {
-		// TODO Auto-generated method stub
+		moduleCommands = new Vector<Command>();
 
+		moduleCommands.add(new NumberOfChecksumThreadsCommand());
 	}
 
 	@Override
@@ -76,6 +87,7 @@ public class ChecksumModule extends SpydModule {
 		prefs.add(PREFERENCE_CHECKSUM_ALGORITHM);
 		prefs.add(PREFERENCE_PERIOD);
 		prefs.add(PREFERENCE_PERIOD_UNITS);
+		prefs.add(PREFERENCE_NUMBER_OF_CHECKER_THREADS);
 		return prefs;
 	}
 
@@ -85,6 +97,19 @@ public class ChecksumModule extends SpydModule {
 
 	public synchronized int getNumberOfCheckerThreads() {
 		return numberOfCheckerThreads;
+	}
+
+	@Override
+	public List<Command> getModuleCommands() {
+		return moduleCommands;
+	}
+
+	/**
+	 * Event called when a preivate thread has completed.
+	 * @param id The ID of the thread that completed.
+	 */
+	synchronized void threadCompletedEvent(int id) {
+
 	}
 
 }

@@ -246,6 +246,12 @@ public class ModuleManager {
 		}
 	}
 
+	/**
+	 * Get a module out of the loaded module list by the module name.
+	 * @param moduleName
+	 * @return
+	 * @throws ModuleException
+	 */
 	public SpydModule getLoadedModule(String moduleName) throws ModuleException {
 		for (SpydModule mod : loadedModules) {
 			if (mod.getName().equals(moduleName)) {
