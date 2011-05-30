@@ -54,8 +54,8 @@ public class Spyd {
 	public Spyd(boolean debug) {
 		initialiseLogging(debug);
 
-		preferences = new SpydPreferences();
 		pluginManager = new PluginManager(this);
+		preferences = pluginManager.getPreferenceManager().getPreferences();
 	}
 
 	/**
@@ -176,14 +176,6 @@ public class Spyd {
 	 */
 	public PluginManager getPluginManager() {
 		return pluginManager;
-	}
-
-	/**
-	 * Sets the settings
-	 * @param preferences
-	 */
-	public void setPreferences(SpydPreferences preferences) {
-		this.preferences = preferences;
 	}
 
 	public SpydPreferences getPreferences() {

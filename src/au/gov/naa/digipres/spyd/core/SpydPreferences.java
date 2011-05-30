@@ -46,10 +46,21 @@ public class SpydPreferences {
 
 	public static final String AUTO_LOAD_MODULES = "auto.load.modules";
 
+	// SMTP Settings
+	public static final String EMAIL_ADDRESS = "email.address";
+	public static final String SMTP_PORT = "smpt.port";
+	public static final String SMTP_SERVER = "smpt.server";
+
+	//Logging
+	public static final String LOGGING_DIRECTORY = "log.directory";
+	public static final String LOGGING_LEVEL = "log.level";
+
 	protected Map<String, PreferenceValue> loadedPreferences = new HashMap<String, PreferenceValue>();
 	protected PreferenceManager preferenceManager = null;
 
-	public SpydPreferences() {
+	private static SpydPreferences preferences;
+
+	private SpydPreferences() {
 		// default constructor
 	}
 
@@ -124,9 +135,24 @@ public class SpydPreferences {
 		if (newSettings.containsKey(AUTO_LOAD_MODULES)) {
 			setPreference(AUTO_LOAD_MODULES, newSettings.getProperty(AUTO_LOAD_MODULES));
 		}
+		if (newSettings.containsKey(EMAIL_ADDRESS)) {
+			setPreference(EMAIL_ADDRESS, newSettings.getProperty(EMAIL_ADDRESS));
+		}
+		if (newSettings.containsKey(SMTP_SERVER)) {
+			setPreference(SMTP_SERVER, newSettings.getProperty(SMTP_SERVER));
+		}
+		if (newSettings.containsKey(SMTP_PORT)) {
+			setPreference(SMTP_PORT, newSettings.getProperty(SMTP_PORT));
+		}
+		if (newSettings.containsKey(LOGGING_DIRECTORY)) {
+			setPreference(LOGGING_DIRECTORY, newSettings.getProperty(LOGGING_DIRECTORY));
+		}
+		if (newSettings.containsKey(LOGGING_LEVEL)) {
+			setPreference(LOGGING_LEVEL, newSettings.getProperty(LOGGING_LEVEL));
+		}
 
 		// update preferences loaded from the preferences manager (from other plugins).
-		for (String pref : preferenceManager.getPreferences()) {
+		for (String pref : preferenceManager.getPluginPreferences()) {
 			if (newSettings.containsKey(pref)) {
 				setPreference(pref, newSettings.getProperty(pref));
 			}
@@ -213,5 +239,13 @@ public class SpydPreferences {
 
 	public PreferenceManager getPreferenceManager() {
 		return preferenceManager;
+	}
+
+	public static SpydPreferences createPreferences() {
+		if (preferences == null) {
+			preferences = new SpydPreferences();
+		}
+
+		return preferences;
 	}
 }

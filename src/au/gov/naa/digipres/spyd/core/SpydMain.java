@@ -22,7 +22,7 @@ public class SpydMain {
 	public static void main(String[] args) {
 		Spyd spyd = new Spyd();
 		try {
-			SpydPreferences prefs = new SpydPreferences();
+			SpydPreferences prefs = spyd.getPreferences();
 			Options options = constructOptions();
 			BasicParser parser = new BasicParser();
 			CommandLine commandLine = parser.parse(options, args);
@@ -39,7 +39,6 @@ public class SpydMain {
 			}
 			prefs.updateFromFile(pathToConfig);
 
-			spyd.setPreferences(prefs);
 			spyd.connectToDataStore(prefs.getDBConnectionProperties());
 
 			spyd.startNetworkService();
