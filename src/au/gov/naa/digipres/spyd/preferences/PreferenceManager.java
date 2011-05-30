@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Vector;
 
 import au.gov.naa.digipres.spyd.core.SpydException;
-import au.gov.naa.digipres.spyd.core.SpydPreferences;
 import au.gov.naa.digipres.spyd.plugin.PluginManager;
 
 public class PreferenceManager {

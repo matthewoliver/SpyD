@@ -11,6 +11,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import au.gov.naa.digipres.spyd.dao.ConnectionException;
+import au.gov.naa.digipres.spyd.preferences.SpydPreferences;
 
 public class SpydMain {
 

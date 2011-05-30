@@ -39,9 +39,8 @@ public class SpydServerWorker extends Thread {
 
 	private boolean workerRunning = true;
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
-
 	private SpydServer spydServer;
+	private Logger logger = spydServer.getCommandManager().getPluginManager().getCommunicationManager().getClassLogger(this);
 
 	public SpydServerWorker(SpydServer server) {
 		socket = null;

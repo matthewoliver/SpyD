@@ -24,8 +24,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.gov.naa.digipres.spyd.core.server.SpydServer;
@@ -33,14 +31,13 @@ import au.gov.naa.digipres.spyd.dao.ConnectionException;
 import au.gov.naa.digipres.spyd.dao.DataAccessManager;
 import au.gov.naa.digipres.spyd.dao.hibernate.HibernateDataAccessManager;
 import au.gov.naa.digipres.spyd.plugin.PluginManager;
+import au.gov.naa.digipres.spyd.preferences.SpydPreferences;
 
 public class Spyd {
 
 	private DataAccessManager dataAccessManager = null;
 
-	private Logger rootLogger;
-	private Logger logger = Logger.getLogger(this.getClass().getName());
-	private FileHandler logFileHandler;
+	private Logger logger;
 
 	private SpydPreferences preferences;
 	private PluginManager pluginManager;
@@ -52,10 +49,10 @@ public class Spyd {
 	}
 
 	public Spyd(boolean debug) {
-		initialiseLogging(debug);
 
 		pluginManager = new PluginManager(this);
 		preferences = pluginManager.getPreferenceManager().getPreferences();
+		logger = pluginManager.getCommunicationManager().getClassLogger(this);
 	}
 
 	/**
@@ -117,57 +114,6 @@ public class Spyd {
 	 */
 	public void disconnectFromDataStore() throws ConnectionException {
 		getDataAccessManager().disconnect();
-	}
-
-	/**
-	 * Initialise logging for the Client.
-	 * @param debugMode
-	 */
-	private void initialiseLogging(boolean debugMode) {
-		// Main logger object
-		rootLogger = Logger.getLogger(Constants.ROOT_LOGGING_PACKAGE);
-		// The default top-level logger has a console handler set to only show INFO level messages - don't use this
-		rootLogger.setUseParentHandlers(false);
-
-		// Add FileHandler
-		initLogFileHandler();
-
-		if (debugMode) {
-			rootLogger.setLevel(Level.ALL);
-			logger.finest("DPR logging initialised - DEBUG MODE");
-		} else {
-			rootLogger.setLevel(Level.FINE);
-			logger.info("DPR logging initialised - Standard Mode");
-		}
-	}
-
-	/**
-	 * Creates a file handler and adds it to the handlers for
-	 * the current logger. If the logFileHandler is not null,
-	 * then one has already been added to the logger, and thus
-	 * it needs to be removed before adding a new file handler.
-	 *
-	 */
-	private void initLogFileHandler() {
-		if (logFileHandler != null) {
-			rootLogger.removeHandler(logFileHandler);
-			logFileHandler.flush();
-			logFileHandler.close();
-		}
-
-		try {
-			String logFilePattern = Constants.DEFAULT_LOG_FILE_PATTERN;
-			File logFileDir = new File(Constants.DEFAULT_LOG_FILE_DIR);
-			if (!logFileDir.exists() && !logFileDir.mkdirs()) {
-				throw new IllegalStateException("Log file directory could not be created!");
-			}
-			logFileHandler = new FileHandler(logFilePattern, 1000000, 2, true);
-			logFileHandler.setFormatter(Constants.DEFAULT_LOG_FORMATTER);
-			rootLogger.addHandler(logFileHandler);
-		} catch (Exception e) {
-			logger.log(Level.FINER, "Could not start logging File Handler", e);
-		}
-
 	}
 
 	/**

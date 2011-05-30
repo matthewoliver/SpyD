@@ -5,13 +5,13 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import au.gov.naa.digipres.spyd.command.Command;
-import au.gov.naa.digipres.spyd.core.SpydPreferences;
 import au.gov.naa.digipres.spyd.dao.DataAccessManager;
 import au.gov.naa.digipres.spyd.dao.ItemRecordDAO;
 import au.gov.naa.digipres.spyd.module.ModuleExecutionException;
 import au.gov.naa.digipres.spyd.module.ModuleManager;
 import au.gov.naa.digipres.spyd.module.SpydModule;
 import au.gov.naa.digipres.spyd.module.checksum.command.NumberOfChecksumThreadsCommand;
+import au.gov.naa.digipres.spyd.preferences.SpydPreferences;
 
 public class ChecksumModule extends SpydModule {
 

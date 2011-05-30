@@ -33,7 +33,7 @@ import au.gov.naa.digipres.spyd.dao.ItemRecordDAO;
 
 public class HibernateDataAccessManager extends DataAccessManager {
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+	private Logger logger = spyd.getPluginManager().getCommunicationManager().getClassLogger(this);
 
 	//Map<String, String> connectionProperties = new HashMap<String, String>();
 

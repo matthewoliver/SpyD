@@ -11,9 +11,8 @@ import java.util.logging.Logger;
 
 import au.gov.naa.digipres.spyd.command.Command;
 import au.gov.naa.digipres.spyd.command.CommandManager;
-import au.gov.naa.digipres.spyd.core.Constants;
-import au.gov.naa.digipres.spyd.core.SpydPreferences;
 import au.gov.naa.digipres.spyd.plugin.PluginManager;
+import au.gov.naa.digipres.spyd.preferences.SpydPreferences;
 
 public class ModuleManager {
 
@@ -42,7 +41,7 @@ public class ModuleManager {
 	public ModuleManager(PluginManager pluginManager) {
 		this.pluginManager = pluginManager;
 
-		logger = Logger.getLogger(Constants.ROOT_LOGGING_PACKAGE);
+		logger = pluginManager.getCommunicationManager().getClassLogger(this);
 		loadedModules = new Vector<SpydModule>();
 		unloadedModules = new Vector<SpydModule>();
 		modules = new HashMap<String, SpydModule>();

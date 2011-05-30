@@ -85,4 +85,8 @@ public abstract class SpydModule {
 	 */
 	public abstract void unloadEvent();
 
+	public ModuleManager getModuleManager() {
+		return moduleManager;
+	}
+
 }

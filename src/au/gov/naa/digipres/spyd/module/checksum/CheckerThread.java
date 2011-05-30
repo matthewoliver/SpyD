@@ -27,8 +27,8 @@ public class CheckerThread extends Thread {
 
 	protected int checkerState;
 
-	protected Logger logger = Logger.getLogger(this.getClass().getName());
 	protected ChecksumModule checksumModule;
+	protected Logger logger = checksumModule.getModuleManager().getPluginManager().getCommunicationManager().getClassLogger(this);
 
 	// Specifies whether the thread is a worker thread (Used in the normal rolling checksum checking behaviour)
 	// or a private thread, used by the checksum module to do other odd jobs (e.g. re-check failed checksums) 

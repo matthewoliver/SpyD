@@ -26,7 +26,9 @@ public class Constants {
 	public static final String ROOT_LOGGING_PACKAGE = "au.gov.naa.digipres";
 
 	public static final String DEFAULT_LOG_FILE_DIR = "log";
-	public static final String DEFAULT_LOG_FILE_PATTERN = File.separator + "spyd%g.log";
+	public static final String DEFAULT_LOG_FILE_PATTERN_ENDING = "%g.log";
+	public static final String DEFAULT_LOG_FILE_PATTERN = File.separator + "spyd" + DEFAULT_LOG_FILE_PATTERN_ENDING;
+	public static final int DEFAULT_LOG_FILE_LIMIT = 1000000;
 
 	public static Formatter DEFAULT_LOG_FORMATTER = new Formatter() {
 		@Override

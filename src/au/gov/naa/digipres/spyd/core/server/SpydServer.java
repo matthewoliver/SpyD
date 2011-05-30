@@ -27,9 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.gov.naa.digipres.spyd.command.CommandManager;
-import au.gov.naa.digipres.spyd.core.Constants;
 import au.gov.naa.digipres.spyd.core.Spyd;
-import au.gov.naa.digipres.spyd.core.SpydPreferences;
+import au.gov.naa.digipres.spyd.preferences.SpydPreferences;
 
 public class SpydServer extends Thread {
 	public static final int SERVER_PORT = 3444;
@@ -37,11 +36,10 @@ public class SpydServer extends Thread {
 	private static final int SOCKET_TIMEOUT = 5000;
 	private static final int DEFAULT_THREAD_POOL_SIZE = 5;
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
-
 	private Spyd spyd;
 	private SpydPreferences preferences;
 	private CommandManager commandManager;
+	private Logger logger = commandManager.getPluginManager().getCommunicationManager().getClassLogger(this);
 
 	private boolean running = true;
 
@@ -141,8 +139,7 @@ public class SpydServer extends Thread {
 
 	private void initLogging() {
 		// Main logger object
-		logger = Logger.getLogger(Constants.ROOT_LOGGING_PACKAGE);
-		logger.setLevel(Level.ALL);
+		logger = commandManager.getPluginManager().getCommunicationManager().getClassLogger(this);
 
 		logger.finest("Logging initialised");
 	}

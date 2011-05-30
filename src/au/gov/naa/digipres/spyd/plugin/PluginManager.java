@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 
 import au.gov.naa.digipres.spyd.command.Command;
 import au.gov.naa.digipres.spyd.command.CommandManager;
+import au.gov.naa.digipres.spyd.communication.CommunicationManager;
 import au.gov.naa.digipres.spyd.core.DeSerializeClassLoader;
 import au.gov.naa.digipres.spyd.core.Spyd;
 import au.gov.naa.digipres.spyd.core.SpydException;
@@ -53,6 +54,7 @@ public class PluginManager {
 	private CommandManager commandManager;
 	private ModuleManager moduleManager;
 	private PreferenceManager preferenceManager;
+	private CommunicationManager communicationManager;
 
 	/**
 	 * The deserialised class loader
@@ -69,7 +71,7 @@ public class PluginManager {
 	 */
 	private List<SpydPlugin> unloadablePlugins = new ArrayList<SpydPlugin>();
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+	private Logger logger;
 
 	/**
 	 * Plugin manager main constructor.
@@ -89,6 +91,9 @@ public class PluginManager {
 		commandManager = new CommandManager(this);
 		moduleManager = new ModuleManager(this);
 		preferenceManager = new PreferenceManager(this);
+		communicationManager = new CommunicationManager(this);
+
+		logger = communicationManager.getClassLogger(this);
 	}
 
 	/**
@@ -312,5 +317,12 @@ public class PluginManager {
 	 */
 	public PreferenceManager getPreferenceManager() {
 		return preferenceManager;
+	}
+
+	/**
+	 * @return Returns the communicationManager.
+	 */
+	public CommunicationManager getCommunicationManager() {
+		return communicationManager;
 	}
 }

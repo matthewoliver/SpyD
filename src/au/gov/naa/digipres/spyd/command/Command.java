@@ -28,7 +28,7 @@ public abstract class Command implements Cloneable {
 	protected List<CommandListener> listeners;
 	protected List<String> parameters;
 	protected CommandManager commandManager;
-	protected Logger logger = Logger.getLogger(this.getClass().getName());
+	protected Logger logger = commandManager.getPluginManager().getCommunicationManager().getClassLogger(this);
 
 	public static final String END_MESSAGE = "<!END!>";
 

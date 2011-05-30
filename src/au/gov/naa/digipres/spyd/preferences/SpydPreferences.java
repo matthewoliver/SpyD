@@ -16,7 +16,7 @@
 * 
 * @author Matthew Oliver
 */
-package au.gov.naa.digipres.spyd.core;
+package au.gov.naa.digipres.spyd.preferences;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,7 +25,6 @@ import java.util.Properties;
 import java.util.prefs.Preferences;
 
 import au.gov.naa.digipres.spyd.dao.hibernate.HibernateDataAccessManager;
-import au.gov.naa.digipres.spyd.preferences.PreferenceManager;
 
 /**
  * A simple class to encapsulate the preferences for Spyd.
@@ -60,8 +59,8 @@ public class SpydPreferences {
 
 	private static SpydPreferences preferences;
 
-	private SpydPreferences() {
-		// default constructor
+	private SpydPreferences(PreferenceManager preferenceManager) {
+		this.preferenceManager = preferenceManager;
 	}
 
 	/**
@@ -233,17 +232,13 @@ public class SpydPreferences {
 
 	}
 
-	public void setPreferenceManager(PreferenceManager preferenceManager) {
-		this.preferenceManager = preferenceManager;
-	}
-
 	public PreferenceManager getPreferenceManager() {
 		return preferenceManager;
 	}
 
-	public static SpydPreferences createPreferences() {
+	static SpydPreferences createPreferences(PreferenceManager preferenceManager) {
 		if (preferences == null) {
-			preferences = new SpydPreferences();
+			preferences = new SpydPreferences(preferenceManager);
 		}
 
 		return preferences;
