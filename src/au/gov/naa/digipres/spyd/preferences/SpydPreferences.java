@@ -46,7 +46,8 @@ public class SpydPreferences {
 	public static final String AUTO_LOAD_MODULES = "auto.load.modules";
 
 	// SMTP Settings
-	public static final String EMAIL_ADDRESS = "email.address";
+	public static final String EMAIL_TO_ADDRESS = "email.to.address";
+	public static final String EMAIL_FROM_ADDRESS = "email.from.address";
 	public static final String SMTP_PORT = "smpt.port";
 	public static final String SMTP_SERVER = "smpt.server";
 
@@ -134,8 +135,11 @@ public class SpydPreferences {
 		if (newSettings.containsKey(AUTO_LOAD_MODULES)) {
 			setPreference(AUTO_LOAD_MODULES, newSettings.getProperty(AUTO_LOAD_MODULES));
 		}
-		if (newSettings.containsKey(EMAIL_ADDRESS)) {
-			setPreference(EMAIL_ADDRESS, newSettings.getProperty(EMAIL_ADDRESS));
+		if (newSettings.containsKey(EMAIL_TO_ADDRESS)) {
+			setPreference(EMAIL_TO_ADDRESS, newSettings.getProperty(EMAIL_TO_ADDRESS));
+		}
+		if (newSettings.containsKey(EMAIL_FROM_ADDRESS)) {
+			setPreference(EMAIL_FROM_ADDRESS, newSettings.getProperty(EMAIL_FROM_ADDRESS));
 		}
 		if (newSettings.containsKey(SMTP_SERVER)) {
 			setPreference(SMTP_SERVER, newSettings.getProperty(SMTP_SERVER));
@@ -204,6 +208,7 @@ public class SpydPreferences {
 		}
 
 		preferenceValue.setDirty(true);
+		preferenceManager.firePreferencesUpdatedEvent();
 	}
 
 	private class PreferenceValue {

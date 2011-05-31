@@ -21,18 +21,25 @@
 	<property name="postgresql-jdbc" value="postgresql-jdbc-8.4-701.src" />
 	<property name="commons-collections" value="commons-collections-3.2.1-src" />
 	<property name="javassist" value="javassist-3.11.0" />
+	<property name="activation" value="activation-1.1.1"/>
+	<property name="activation.jar" value="activation.jar"/>
+	<property name="inetlib" value="inetlib-1.1.1"/>
+	<property name="inetlib.jar" value="inetlib.jar"/>
+	<property name="mail" value="mail-1.1.2" />
+	<property name="gnumail.jar" value="gnumail.jar" />
+	<property name="gnumail-providers.jar" value="gnumail-providers.jar" />
 	
     <!-- ================================= 
           target: build_libs              
          ================================= -->
-    <target name="build_libs" depends="build_toplink_essentials, build_log4j, build_slf4j, build_postgres_jdbc, build_commons_collections, build_javassist, build_jreleaseinfo, build_commons_cli" description="Build file for building the multipage plug 3rd party libs.">
+    <target name="build_libs" depends="build_toplink_essentials, build_log4j, build_slf4j, build_postgres_jdbc, build_commons_collections, build_javassist, build_jreleaseinfo, build_commons_cli, build_mail" description="Build file for building the multipage plug 3rd party libs.">
     	<echo>Building third pary libs completed</echo>
     </target>
 
 	<!-- ================================= 
 	     target: clean              
 	     ================================= -->
-	<target name="clean" depends="clean_toplink_essentials, clean_log4j, clean_slf4j, clean_postgres_jdbc, clean_commons_collections, clean_javassist, clean_jreleaseinfo, clean_commons_cli" description="Build file for building the CSV plugin 3rd party libs.">
+	<target name="clean" depends="clean_toplink_essentials, clean_log4j, clean_slf4j, clean_postgres_jdbc, clean_commons_collections, clean_javassist, clean_jreleaseinfo, clean_commons_cli, clean_mail" description="Build file for building the CSV plugin 3rd party libs.">
 		<echo>Cleaning third party libs completed.</echo>
 	</target>
 	
@@ -215,6 +222,95 @@
     	<echo>Cleaning javassist</echo>
     	<ant dir="${javassist}" target="clean" inheritall="false" inheritrefs="false" />
     </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+			target: activation                      
+		    - - - - - - - - - - - - - - - - - -->
+		<target name="build_activation">
+		 	<property name="activation_classes" value="${activation}/classes"/>
+		    	
+		   	<echo>Building activation</echo>
+		   	<ant dir="${activation}" />
+		    	
+		   	<!-- Move build files to bin directory -->
+		   	<copy todir="${bindir}">
+		   		<fileset dir="${activation_classes}">
+		   			<include name="**/*"/>
+		   		</fileset>
+		   	</copy>
+			
+			<!-- Move activation.jar to mail directory -->
+			<copy todir="${mail}" file="${activation}/${activation.jar}" />
+		</target>
+
+		<!-- - - - - - - - - - - - - - - - - - 
+			target: clean_activation                      
+		    - - - - - - - - - - - - - - - - - -->
+		<target name="clean_activation">
+			<echo>Cleaning activation</echo>
+			<ant dir="${activation}" target="clean" />
+		</target>
+		
+		<!-- - - - - - - - - - - - - - - - - - 
+	          target: build_inetlib                      
+	         - - - - - - - - - - - - - - - - - -->
+	    <target name="build_inetlib">
+	    	<property name="inetlib_classes" value="${inetlib}/classes"/>
+	    	
+	    	<echo>Building inetlib</echo>
+	    	<ant dir="${inetlib}" target="dist" />
+	    	
+	    	<!-- Move build files to bin directory -->
+	    	<copy todir="${bindir}">
+	    		<fileset dir="${inetlib_classes}">
+	    			<include name="**/*"/>
+	    		</fileset>
+	    	</copy>
+	    	
+	    	<!-- Move the inetlib jar file to mail -->
+	    	<copy todir="${mail}" file="${inetlib}/${inetlib.jar}" />
+	    </target>
+		
+		<!-- - - - - - - - - - - - - - - - - - 
+	          target: clean_inetlib                      
+	         - - - - - - - - - - - - - - - - - -->
+	    <target name="clean_inetlib">
+	    	<echo>Cleaning inetlib</echo>
+	    	<ant dir="${inetlib}" target="clean"/>
+	    	<delete file="${inetlib}/${inetlib.jar}" quiet="true"></delete>
+	    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: build_mail                      
+	         - - - - - - - - - - - - - - - - - -->
+	    <target name="build_mail" depends="build_activation, build_inetlib">
+	    	<property name="mail_classes" value="${mail}/classes" />
+	    	
+	    	<echo>Building mail</echo>
+	    	<ant dir="${mail}" />
+	    	
+	    	<!-- Move build files to the bin directory -->
+	    	<copy todir="${bindir}">
+	    		<fileset dir="${mail_classes}">
+	    			<include name="**/*"/>
+	    		</fileset>
+	    	</copy>
+	    	
+	    </target>
+
+		<!-- - - - - - - - - - - - - - - - - - 
+	          target: clean_mail                      
+	         - - - - - - - - - - - - - - - - - -->
+	    <target name="clean_mail">
+	    	<echo>Cleaning mail</echo>
+	    	<ant dir="${mail}" target="clean" />
+	    	
+	    	<!-- Now remove the created jars, but if they don'e exist don't fail. -->
+	    	<delete file="${mail}/${inetlib.jar}" quiet="true"></delete>
+	    	<delete file="${mail}/${activation.jar}" quiet="true"></delete>
+	    	<delete file="${mail}/${gnumail.jar}" quiet="true"></delete>
+	    	<delete file="${mail}/${gnumail-providers.jar}" quiet="true"></delete>
+	    </target>
 	
 	<!-- - - - - - - - - - - - - - - - - - 
           target: build_jreleaseinfo                      

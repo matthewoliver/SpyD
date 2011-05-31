@@ -5,25 +5,36 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.mail.MessagingException;
+
 import au.gov.naa.digipres.spyd.core.Constants;
 import au.gov.naa.digipres.spyd.plugin.PluginManager;
 import au.gov.naa.digipres.spyd.preferences.PreferenceManager;
+import au.gov.naa.digipres.spyd.preferences.PreferencesListener;
 import au.gov.naa.digipres.spyd.preferences.SpydPreferences;
 
-public class CommunicationManager {
+public class CommunicationManager implements PreferencesListener {
 	private PluginManager pluginManager;
 	private Logger logger = getClassLogger(this);
 	private Logger rootLogger;
 
 	private FileHandler logFileHandler;
 	private SpydPreferences preferences;
+	private EmailerThread emailThread;
 
 	public CommunicationManager(PluginManager pluginManager) {
 		this.pluginManager = pluginManager;
 
 		preferences = pluginManager.getPreferenceManager().getPreferences();
 		// setup the root logger. 
+
 		setupRootLogger();
+		try {
+			emailThread = new EmailerThread(this);
+			emailThread.start();
+		} catch (EmailException e) {
+			logger.warning(e.getMessage());
+		}
 	}
 
 	private void setupRootLogger() {
@@ -138,5 +149,36 @@ public class CommunicationManager {
 
 	public void log(Level logLevel, String message) {
 		logger.log(logLevel, message);
+	}
+
+	// Email methods
+	public boolean isEmailEnabled() {
+		return !emailThread.isEmailDisabled();
+	}
+
+	public void sendEmail(String subject, String message) throws MessagingException {
+		emailThread.sendEmail(subject, message);
+	}
+
+	@Override
+	public void preferencesUpdated() {
+		emailThread.setRunning(false);
+		if (emailThread.isEmailDisabled()) {
+			// Safe to attempt to recreate the emailThread
+			try {
+				emailThread = new EmailerThread(this);
+				emailThread.start();
+			} catch (EmailException e) {
+				logger.warning("Attempted to enable the email facilities after a preferenced updated event. Still failed.");
+			}
+		} else {
+			// Change some of the settings. 
+			try {
+				emailThread.preferencesUpdated();
+			} catch (MessagingException e) {
+				// TODO Deal with this better?
+				e.printStackTrace();
+			}
+		}
 	}
 }

@@ -14,11 +14,14 @@ public class PreferenceManager {
 	private List<String> pluginPreferences;
 	private SpydPreferences preferences;
 
+	private List<PreferencesListener> preferencesListeners;
+
 	public PreferenceManager(PluginManager pluginManager) {
 		this.pluginManager = pluginManager;
 
 		pluginPreferences = new Vector<String>();
-		preferences = SpydPreferences.createPreferences();
+		preferences = SpydPreferences.createPreferences(this);
+		preferencesListeners = new Vector<PreferencesListener>();
 	}
 
 	public PluginManager getPluginManager() {
@@ -35,6 +38,7 @@ public class PreferenceManager {
 		}
 
 		pluginPreferences.add(pref);
+		firePreferencesUpdatedEvent();
 	}
 
 	public void addPreferences(List<String> preferences) throws SpydException {
@@ -45,14 +49,32 @@ public class PreferenceManager {
 
 	public void updateFromFile(String propertiesFile) throws IOException {
 		preferences.updateFromFile(propertiesFile);
+		firePreferencesUpdatedEvent();
 	}
 
 	public void updateFromFile(File propertiesFile) throws IOException {
 		updateFromFile(propertiesFile.getAbsolutePath());
 	}
 
-	public SpydPreferences getPreferences() {
+	public synchronized SpydPreferences getPreferences() {
 		return preferences;
 	}
 
+	public void registerPreferencesListener(PreferencesListener listener) {
+		if (!preferencesListeners.contains(listener)) {
+			preferencesListeners.add(listener);
+		}
+	}
+
+	public void removePreferencesListener(PreferencesListener listener) {
+		if (preferencesListeners.contains(listener)) {
+			preferencesListeners.remove(listener);
+		}
+	}
+
+	void firePreferencesUpdatedEvent() {
+		for (PreferencesListener listener : preferencesListeners) {
+			listener.preferencesUpdated();
+		}
+	}
 }
