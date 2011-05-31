@@ -12,9 +12,10 @@ import java.util.logging.Logger;
 import au.gov.naa.digipres.spyd.command.Command;
 import au.gov.naa.digipres.spyd.command.CommandManager;
 import au.gov.naa.digipres.spyd.plugin.PluginManager;
+import au.gov.naa.digipres.spyd.preferences.PreferencesListener;
 import au.gov.naa.digipres.spyd.preferences.SpydPreferences;
 
-public class ModuleManager {
+public class ModuleManager implements PreferencesListener {
 
 	public static final int DEFAULT_THREAD_POOL_SIZE = 5;
 
@@ -86,6 +87,7 @@ public class ModuleManager {
 			for (String mod : modulesAutoLoad) {
 				if (!modules.containsKey(mod)) {
 					// module doesn't exist... yet or typo.
+					logger.warning("Module '" + mod + "' doesn't exist");
 					continue;
 				} else {
 					try {
@@ -197,6 +199,8 @@ public class ModuleManager {
 		removeModuleFromUnloadedList(module);
 		addModuleToLoadedList(module);
 
+		getPluginManager().getPreferenceManager().registerPreferencesListener(module);
+
 		// Actually load the module.
 		synchronized (idleThreads) {
 			ModuleWorkerThread mwt;
@@ -232,8 +236,12 @@ public class ModuleManager {
 		removeModuleFromLoadedList(module);
 		addModuleToUnloadedList(module);
 
+		// remove the module from list of preference listerners
+		getPluginManager().getPreferenceManager().removePreferencesListener(module);
+
 		// stop and remove all instances of the module from running, sometimes more then one module thread could be 
 		// running so we need to remove them all.
+		// TODO is this still going to happen ^
 		for (String key : runningModuleThreads.keySet()) {
 			if (runningModuleThreads.get(key).getModule().equals(module)) {
 				// shut this thread down
@@ -323,5 +331,10 @@ public class ModuleManager {
 
 	public PluginManager getPluginManager() {
 		return pluginManager;
+	}
+
+	@Override
+	public void preferencesUpdated() {
+		syncAutoLoadModules();
 	}
 }

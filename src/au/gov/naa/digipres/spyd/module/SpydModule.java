@@ -24,8 +24,9 @@ import java.util.Queue;
 import java.util.Vector;
 
 import au.gov.naa.digipres.spyd.command.Command;
+import au.gov.naa.digipres.spyd.preferences.PreferencesListener;
 
-public abstract class SpydModule {
+public abstract class SpydModule implements PreferencesListener {
 
 	public static final String SPYD_MODULE_ABSTRACT_NAME = "Abstact Module";
 
@@ -87,6 +88,10 @@ public abstract class SpydModule {
 
 	public ModuleManager getModuleManager() {
 		return moduleManager;
+	}
+
+	public void preferencesUpdated() {
+		// do nothing unless the module overrides this method
 	}
 
 }

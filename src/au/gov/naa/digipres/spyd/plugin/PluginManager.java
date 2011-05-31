@@ -94,6 +94,9 @@ public class PluginManager {
 		communicationManager = new CommunicationManager(this);
 
 		logger = communicationManager.getClassLogger(this);
+
+		preferenceManager.registerPreferencesListener(communicationManager);
+		preferenceManager.registerPreferencesListener(moduleManager);
 	}
 
 	/**
